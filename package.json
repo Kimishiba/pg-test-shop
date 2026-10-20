@@ -1,0 +1,12 @@
+{
+  "name": "pg-test-shop",
+  "version": "1.0.0",
+  "description": "Payment Gateway Test Shop — Plain Style UI Prototypes",
+  "scripts": {
+    "start": "npx serve -l 3000 .",
+    "serve": "python3 -m http.server 3000"
+  },
+  "keywords": ["payment-gateway", "prototype", "ui-design"],
+  "author": "Antigravity",
+  "license": "ISC"
+}

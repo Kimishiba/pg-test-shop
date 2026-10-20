@@ -1,0 +1,1564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CM Pay Test Shop — Design Decision Prototype</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Anybody:wght@700;800;900&family=Hanken+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* =========================================================================
+       GLOBAL RESET & PROTOTYPE SWITCHER
+       ========================================================================= */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    html, body {
+      min-height: 100vh;
+      font-size: 15px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Floating Prototype Switcher Pill */
+    #prototype-switcher {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999999;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: #09090b;
+      color: #fafafa;
+      padding: 8px 18px;
+      border-radius: 9999px;
+      box-shadow: 0 12px 30px -4px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.18);
+      font-family: "Inter", -apple-system, sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      user-select: none;
+      backdrop-filter: blur(16px);
+    }
+    #prototype-switcher button.arrow-btn {
+      background: rgba(255, 255, 255, 0.12);
+      border: none;
+      color: #ffffff;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 700;
+      transition: background 0.15s, transform 0.1s;
+    }
+    #prototype-switcher button.arrow-btn:hover { background: rgba(255, 255, 255, 0.25); }
+    #prototype-switcher button.arrow-btn:active { transform: scale(0.92); }
+    #prototype-switcher .tag {
+      background: #27272a;
+      color: #fafafa;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 700;
+      font-family: "JetBrains Mono", monospace;
+    }
+    #prototype-switcher .hint {
+      color: #71717a;
+      font-size: 11px;
+    }
+
+    /* Top Comparison Navigation Banner */
+    .top-meta-banner {
+      background: #09090b;
+      color: #a1a1aa;
+      padding: 10px 24px;
+      font-family: "Inter", sans-serif;
+      font-size: 12.5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .top-meta-banner .title {
+      font-weight: 600;
+      color: #ffffff;
+    }
+    .top-variant-pills {
+      display: flex;
+      gap: 6px;
+    }
+    .top-v-pill {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: #fafafa;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 11.5px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .top-v-pill:hover { background: rgba(255, 255, 255, 0.18); }
+    .top-v-pill.active {
+      background: #ffffff;
+      color: #09090b;
+      font-weight: 600;
+    }
+
+    /* Views */
+    .cmpay-view {
+      display: none;
+      min-height: 100vh;
+      padding-bottom: 110px;
+    }
+    .cmpay-view.active {
+      display: block;
+    }
+
+
+    /* =========================================================================
+       VARIANT A: MINIMAL MONOCHROME (Swiss Clean / Linear / Vercel)
+       Clean 1px borders, 6-8px radius, subtle slate accents, quiet confidence
+       ========================================================================= */
+    #view-a {
+      background: #fbfbfd;
+      color: #0f172a;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    #view-a a { color: inherit; text-decoration: none; }
+
+    #view-a header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #e2e8f0;
+      padding: 0 32px;
+      height: 60px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #view-a .brand {
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #0f172a;
+    }
+    #view-a .env-toggle {
+      display: inline-flex;
+      background: #f1f5f9;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 2px;
+    }
+    #view-a .env-toggle button {
+      border: none;
+      background: transparent;
+      padding: 4px 10px;
+      font-size: 12px;
+      font-weight: 500;
+      border-radius: 4px;
+      cursor: pointer;
+      color: #64748b;
+      transition: all 0.15s;
+    }
+    #view-a .env-toggle button.on {
+      background: #ffffff;
+      color: #0f172a;
+      font-weight: 600;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    }
+    #view-a .chip-ok {
+      font-size: 11px;
+      font-weight: 500;
+      color: #065f46;
+      background: #ecfdf5;
+      border: 1px solid #a7f3d0;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    #view-a .chip-ok::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #10b981;
+    }
+
+    #view-a .nav-links {
+      display: flex;
+      gap: 18px;
+      font-size: 13px;
+      color: #64748b;
+    }
+    #view-a .nav-links a:hover, #view-a .nav-links a.active {
+      color: #0f172a;
+      font-weight: 600;
+    }
+
+    #view-a main {
+      max-width: 860px;
+      margin: 40px auto;
+      padding: 0 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    #view-a h1 {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.025em;
+      color: #0f172a;
+    }
+    #view-a .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+    }
+    #view-a .card {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    #view-a .card:hover {
+      border-color: #cbd5e1;
+      box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05);
+    }
+    #view-a .card h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #0f172a;
+      letter-spacing: -0.015em;
+    }
+    #view-a .card p {
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.5;
+    }
+    #view-a .price {
+      font-size: 26px;
+      font-weight: 600;
+      color: #0f172a;
+      letter-spacing: -0.02em;
+      margin: 6px 0;
+    }
+    #view-a label {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #334155;
+    }
+    #view-a input {
+      padding: 8px 12px;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      font-size: 13px;
+      background: #ffffff;
+      color: #0f172a;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+    #view-a input:focus {
+      border-color: #0f172a;
+      box-shadow: 0 0 0 2px rgba(15, 23, 42, 0.08);
+    }
+    #view-a button.btn-buy {
+      margin-top: auto;
+      padding: 10px 16px;
+      background: #0f172a;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    #view-a button.btn-buy:hover {
+      background: #1e293b;
+    }
+
+    /* QA Toolbar Styling A */
+    #view-a .qa-toggle-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1000;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #0f172a;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 9999px;
+      padding: 10px 18px;
+      font-size: 13px;
+      font-weight: 500;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    #view-a .qa-toggle-btn:hover { background: #1e293b; }
+
+    #view-a .qa-panel {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1001;
+      width: 400px;
+      max-width: calc(100vw - 32px);
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      box-shadow: 0 20px 40px -8px rgba(0, 0, 0, 0.15);
+      overflow: hidden;
+      display: none;
+    }
+    #view-a .qa-panel-header {
+      background: #f8fafc;
+      border-bottom: 1px solid #e2e8f0;
+      padding: 12px 18px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #view-a .qa-panel-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: #0f172a;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    #view-a .qa-badge {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      background: #eff6ff;
+      color: #2563eb;
+      border-radius: 4px;
+    }
+    #view-a .qa-close-btn {
+      background: none;
+      border: none;
+      font-size: 18px;
+      color: #64748b;
+      cursor: pointer;
+    }
+    #view-a .qa-panel-body {
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+    }
+    #view-a .qa-field-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: #475569;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 4px;
+      display: block;
+    }
+    #view-a select.qa-select {
+      width: 100%;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 8px 10px;
+      font-size: 13px;
+      background: #ffffff;
+      color: #0f172a;
+      outline: none;
+    }
+    #view-a .qa-card-box {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    #view-a .qa-copy-input-row {
+      display: flex;
+      gap: 6px;
+    }
+    #view-a input.qa-mono-input {
+      flex: 1;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 7px 10px;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      background: #ffffff;
+      color: #0f172a;
+    }
+    #view-a button.qa-copy-btn {
+      padding: 7px 12px;
+      background: #0f172a;
+      color: #ffffff;
+      border: none;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    #view-a button.qa-copy-all-btn {
+      width: 100%;
+      padding: 10px;
+      background: #ffffff;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #0f172a;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    #view-a button.qa-copy-all-btn:hover { background: #f1f5f9; }
+    #view-a .qa-desc-box {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 10px;
+      font-size: 12px;
+      color: #475569;
+      line-height: 1.4;
+    }
+
+
+    /* =========================================================================
+       VARIANT C: UTILITY FUNCTIONALIST (SaaS Workbench / Stripe Dev)
+       Structured 4px radius, zinc gray palette, Inter + JetBrains Mono
+       ========================================================================= */
+    #view-c {
+      background: #f4f4f5;
+      color: #18181b;
+      font-family: "Inter", sans-serif;
+    }
+    #view-c .mono {
+      font-family: "JetBrains Mono", monospace;
+    }
+    #view-c a { color: inherit; text-decoration: none; }
+
+    #view-c header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: #ffffff;
+      border-bottom: 1px solid #e4e4e7;
+      padding: 0 24px;
+      height: 48px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #view-c .brand {
+      font-size: 13px;
+      font-weight: 700;
+      color: #18181b;
+      letter-spacing: 0.02em;
+    }
+    #view-c .env-toggle {
+      display: inline-flex;
+      border: 1px solid #d4d4d8;
+      border-radius: 3px;
+      background: #f4f4f5;
+      padding: 1px;
+    }
+    #view-c .env-toggle button {
+      border: none;
+      background: transparent;
+      padding: 3px 8px;
+      font-size: 11.5px;
+      font-family: "JetBrains Mono", monospace;
+      font-weight: 600;
+      cursor: pointer;
+      color: #71717a;
+    }
+    #view-c .env-toggle button.on {
+      background: #2563eb;
+      color: #ffffff;
+      border-radius: 2px;
+    }
+    #view-c .chip-ok {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 10.5px;
+      font-weight: 600;
+      color: #15803d;
+      background: #dcfce7;
+      border: 1px solid #bbf7d0;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    #view-c .nav-links {
+      display: flex;
+      gap: 14px;
+      font-size: 12px;
+      color: #71717a;
+    }
+    #view-c .nav-links a:hover, #view-c .nav-links a.active {
+      color: #18181b;
+      font-weight: 600;
+    }
+
+    #view-c main {
+      max-width: 880px;
+      margin: 28px auto;
+      padding: 0 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+    #view-c h1 {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      color: #18181b;
+    }
+    #view-c .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    #view-c .card {
+      background: #ffffff;
+      border: 1px solid #e4e4e7;
+      border-radius: 4px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    #view-c .card h2 {
+      font-size: 14px;
+      font-weight: 700;
+      color: #18181b;
+    }
+    #view-c .card p {
+      font-size: 12px;
+      color: #71717a;
+      line-height: 1.4;
+    }
+    #view-c .price {
+      font-family: "JetBrains Mono", monospace;
+      font-size: 22px;
+      font-weight: 700;
+      color: #18181b;
+      margin: 4px 0;
+    }
+    #view-c label {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      font-family: "JetBrains Mono", monospace;
+      color: #52525b;
+    }
+    #view-c input {
+      padding: 6px 10px;
+      border: 1px solid #d4d4d8;
+      border-radius: 3px;
+      font-size: 12px;
+      font-family: "JetBrains Mono", monospace;
+      background: #fafafa;
+      color: #18181b;
+      outline: none;
+    }
+    #view-c input:focus {
+      border-color: #2563eb;
+      background: #ffffff;
+    }
+    #view-c button.btn-buy {
+      margin-top: auto;
+      padding: 8px 14px;
+      background: #2563eb;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    #view-c button.btn-buy:hover { background: #1d4ed8; }
+
+    /* QA Toolbar Styling C */
+    #view-c .qa-toggle-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1000;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #18181b;
+      color: #fafafa;
+      border: 1px solid #27272a;
+      border-radius: 4px;
+      padding: 8px 14px;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+    #view-c .qa-panel {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1001;
+      width: 410px;
+      max-width: calc(100vw - 32px);
+      background: #ffffff;
+      border: 1px solid #d4d4d8;
+      border-radius: 4px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      display: none;
+    }
+    #view-c .qa-panel-header {
+      background: #fafafa;
+      border-bottom: 1px solid #e4e4e7;
+      padding: 10px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: #18181b;
+    }
+    #view-c .qa-badge {
+      font-size: 9.5px;
+      font-family: "JetBrains Mono", monospace;
+      background: #e0e7ff;
+      color: #3730a3;
+      padding: 2px 6px;
+      border-radius: 3px;
+    }
+    #view-c .qa-close-btn {
+      background: none;
+      border: none;
+      font-size: 16px;
+      color: #71717a;
+      cursor: pointer;
+    }
+    #view-c .qa-panel-body {
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+    }
+    #view-c .qa-field-label {
+      font-size: 10.5px;
+      font-weight: 700;
+      font-family: "JetBrains Mono", monospace;
+      color: #52525b;
+      margin-bottom: 3px;
+      display: block;
+    }
+    #view-c select.qa-select {
+      width: 100%;
+      border: 1px solid #d4d4d8;
+      border-radius: 3px;
+      padding: 6px 8px;
+      font-size: 12px;
+      background: #fafafa;
+      color: #18181b;
+      outline: none;
+    }
+    #view-c .qa-card-box {
+      background: #f4f4f5;
+      border: 1px solid #e4e4e7;
+      border-radius: 3px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    #view-c .qa-copy-input-row {
+      display: flex;
+      gap: 4px;
+    }
+    #view-c input.qa-mono-input {
+      flex: 1;
+      font-family: "JetBrains Mono", monospace;
+      font-size: 12.5px;
+      font-weight: 700;
+      padding: 6px 8px;
+      border: 1px solid #d4d4d8;
+      border-radius: 3px;
+      background: #ffffff;
+      color: #18181b;
+    }
+    #view-c button.qa-copy-btn {
+      padding: 6px 10px;
+      background: #2563eb;
+      color: #ffffff;
+      border: none;
+      border-radius: 3px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    #view-c button.qa-copy-all-btn {
+      width: 100%;
+      padding: 8px;
+      background: #ffffff;
+      border: 1px solid #d4d4d8;
+      border-radius: 3px;
+      font-size: 11.5px;
+      font-weight: 600;
+      font-family: "JetBrains Mono", monospace;
+      color: #18181b;
+      cursor: pointer;
+    }
+    #view-c .qa-desc-box {
+      background: #ffffff;
+      border: 1px solid #d4d4d8;
+      border-left: 3px solid #2563eb;
+      border-radius: 2px;
+      padding: 8px 10px;
+      font-size: 11.5px;
+      color: #3f3f46;
+      line-height: 1.4;
+    }
+
+
+    /* =========================================================================
+       CURRENT LIVE: NEO-BRUTALIST (Reference Baseline)
+       Exact 4px solid #000, 6px hard shadow, Anybody font, safety orange/blue
+       ========================================================================= */
+    #view-live {
+      background: #f6f7f9;
+      color: #000000;
+      font-family: 'Hanken Grotesk', -apple-system, sans-serif;
+    }
+    #view-live a { color: inherit; text-decoration: none; }
+
+    #view-live header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 24px;
+      background: #ffffff;
+      border-bottom: 4px solid #000000;
+    }
+    #view-live .brand {
+      font-family: 'Anybody', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      color: #000000;
+    }
+    #view-live .env-toggle {
+      display: inline-flex;
+      border: 3px solid #000000;
+      box-shadow: 4px 4px 0px #000000;
+    }
+    #view-live .env-toggle button {
+      border: none;
+      padding: 6px 12px;
+      font-family: 'Anybody', sans-serif;
+      font-weight: 800;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      background: #ffffff;
+      cursor: pointer;
+    }
+    #view-live .env-toggle button.on {
+      background: #2f7dff;
+      color: #ffffff;
+    }
+    #view-live .chip-ok {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 800;
+      background: #3ddc97;
+      color: #000000;
+      border: 2px solid #000000;
+      padding: 3px 8px;
+    }
+
+    #view-live .nav-links {
+      display: flex;
+      gap: 16px;
+      font-family: 'Anybody', sans-serif;
+      font-weight: 800;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+    #view-live .nav-links a.active {
+      background: #2f7dff;
+      color: #ffffff;
+      padding: 4px 8px;
+      border: 2px solid #000000;
+    }
+
+    #view-live main {
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 32px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    #view-live h1 {
+      font-family: 'Anybody', sans-serif;
+      font-weight: 900;
+      font-size: 2.2rem;
+      letter-spacing: -0.03em;
+      text-transform: uppercase;
+      color: #000000;
+    }
+    #view-live .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 24px;
+    }
+    #view-live .card {
+      background: #ffffff;
+      border: 4px solid #000000;
+      border-radius: 0px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: 6px 6px 0px #000000;
+    }
+    #view-live .card h2 {
+      font-family: 'Anybody', sans-serif;
+      font-weight: 900;
+      font-size: 1.4rem;
+      text-transform: uppercase;
+    }
+    #view-live .card p {
+      font-size: 15px;
+      color: #333333;
+    }
+    #view-live .price {
+      font-family: 'Anybody', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 900;
+      color: #000000;
+    }
+    #view-live label {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    #view-live input {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 10px 12px;
+      border: 3px solid #000000;
+      border-radius: 0px;
+      box-shadow: 3px 3px 0px #000000;
+    }
+    #view-live button.btn-buy {
+      font-family: 'Anybody', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      padding: 12px 20px;
+      border: 4px solid #000000;
+      border-radius: 0px;
+      background: #2f7dff;
+      color: #ffffff;
+      cursor: pointer;
+      box-shadow: 6px 6px 0px #000000;
+      transition: transform 0.1s ease, box-shadow 0.1s ease;
+    }
+    #view-live button.btn-buy:hover {
+      transform: translate(3px, 3px);
+      box-shadow: 3px 3px 0px #000000;
+    }
+
+    /* Live QA Toolbar */
+    #view-live .qa-toggle-btn {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1000;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Anybody', sans-serif;
+      font-weight: 800;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      background: #2f7dff;
+      color: #ffffff;
+      border: 4px solid #000000;
+      border-radius: 0px;
+      box-shadow: 5px 5px 0px #000000;
+      padding: 10px 16px;
+      cursor: pointer;
+    }
+    #view-live .qa-panel {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1001;
+      width: 420px;
+      max-width: calc(100vw - 32px);
+      background: #ffffff;
+      border: 4px solid #000000;
+      box-shadow: 8px 8px 0px #000000;
+      display: none;
+    }
+    #view-live .qa-panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      background: #000000;
+      color: #ffffff;
+      border-bottom: 4px solid #000000;
+      font-family: 'Anybody', sans-serif;
+      font-weight: 800;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+    }
+    #view-live .qa-badge {
+      background: #2f7dff;
+      color: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 2px 6px;
+      border: 1px solid #000000;
+    }
+    #view-live .qa-close-btn {
+      background: transparent;
+      border: 2px solid #ffffff;
+      color: #ffffff;
+      font-family: 'Anybody', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 900;
+      padding: 2px 8px;
+      cursor: pointer;
+    }
+    #view-live .qa-panel-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: calc(100vh - 120px);
+      overflow-y: auto;
+    }
+    #view-live .qa-field-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #000000;
+      display: block;
+      margin-bottom: 3px;
+    }
+    #view-live select.qa-select {
+      width: 100%;
+      border: 3px solid #000000;
+      padding: 8px 10px;
+      font-size: 0.88rem;
+      font-weight: 600;
+      outline: none;
+    }
+    #view-live .qa-card-box {
+      background: #f2f7ff;
+      border: 3px solid #000000;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    #view-live .qa-copy-input-row {
+      display: flex;
+    }
+    #view-live input.qa-mono-input {
+      flex: 1;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 8px 10px;
+      border: 3px solid #000000;
+      border-right: none;
+    }
+    #view-live button.qa-copy-btn {
+      font-family: 'Anybody', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      background: #2f7dff;
+      color: #ffffff;
+      border: 3px solid #000000;
+      padding: 0 14px;
+      cursor: pointer;
+    }
+    #view-live button.qa-copy-all-btn {
+      width: 100%;
+      font-family: 'Anybody', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 10px;
+      background: #ffffff;
+      color: #000000;
+      border: 3px solid #000000;
+      box-shadow: 4px 4px 0px #000000;
+      cursor: pointer;
+    }
+    #view-live .qa-desc-box {
+      background: #ffffff;
+      border: 2px solid #000000;
+      border-left: 6px solid #000000;
+      padding: 8px 10px;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Metadata & Direct Selection Pill Bar -->
+  <div class="top-meta-banner">
+    <div>
+      <span class="title">CM Pay Test Shop — Design Evaluation</span>
+      <span style="margin-left: 8px; color: #71717a;">Exact replication of <code>https://cmpay.homeassistantkrooswijkhof.duckdns.org/</code></span>
+    </div>
+    <div class="top-variant-pills">
+      <button class="top-v-pill" onclick="selectVariant(0)">Variant A: Minimal Monochrome</button>
+      <button class="top-v-pill" onclick="selectVariant(1)">Variant C: Utility Functionalist</button>
+      <button class="top-v-pill" onclick="selectVariant(2)">Current Live: Neo-Brutalist</button>
+    </div>
+  </div>
+
+
+  <!-- =========================================================================
+       VARIANT A: MINIMAL MONOCHROME (Swiss Clean / Linear / Vercel style)
+       ========================================================================= -->
+  <div id="view-a" class="cmpay-view">
+    <header>
+      <div style="display:flex;align-items:center;gap:16px;">
+        <a class="brand" href="javascript:void(0)">CM Pay Test Shop</a>
+        <div class="env-toggle">
+          <button type="button" class="env-btn" onclick="setEnvironment('production')">Production</button>
+          <button type="button" class="env-btn on" onclick="setEnvironment('acceptance')">Acceptance</button>
+        </div>
+        <span class="chip-ok">OAuth Ready</span>
+      </div>
+      <div class="nav-links">
+        <a href="javascript:void(0)" class="active">Basic shop</a>
+        <a href="javascript:void(0)">Direct API</a>
+        <a href="javascript:void(0)">Merchant order</a>
+        <a href="javascript:void(0)">Orders</a>
+        <a href="javascript:void(0)">Config</a>
+      </div>
+    </header>
+
+    <main>
+      <h1>Test products</h1>
+      <div class="grid">
+        <!-- One cent -->
+        <div class="card">
+          <h2>One cent</h2>
+          <p>Fixed price product for testing 1-cent transactions.</p>
+          <div class="price">€0.01</div>
+          <button class="btn-buy" onclick="simulateCheckout('One cent', '0.01')">Buy now</button>
+        </div>
+
+        <!-- Test coin -->
+        <div class="card">
+          <h2>Test coin</h2>
+          <p>Fixed price product for the smallest possible card test.</p>
+          <div class="price">€0.02</div>
+          <button class="btn-buy" onclick="simulateCheckout('Test coin', '0.02')">Buy now</button>
+        </div>
+
+        <!-- Custom amount -->
+        <div class="card">
+          <h2>Custom amount</h2>
+          <p>You choose the price (€0.00 – €1000.00). Useful for testing amounts and declines.</p>
+          <label>
+            <span>Amount (EUR)</span>
+            <input type="text" id="va-custom-amount" placeholder="12.34" value="12.34">
+          </label>
+          <button class="btn-buy" onclick="simulateCheckout('Custom amount', document.getElementById('va-custom-amount').value)">Buy now</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- QA Toolbar Floating Trigger -->
+    <button class="qa-toggle-btn" onclick="toggleQaPanel(true)">
+      <span>⚡</span>
+      <span>QA Test Cards</span>
+    </button>
+
+    <!-- QA Toolbar Panel -->
+    <aside class="qa-panel" id="qa-panel-a">
+      <div class="qa-panel-header">
+        <div class="qa-panel-title">
+          <span class="qa-badge" id="qa-badge-a">Acceptance</span>
+          <span>CM.com Test Cards</span>
+        </div>
+        <button class="qa-close-btn" onclick="toggleQaPanel(false)">&times;</button>
+      </div>
+      <div class="qa-panel-body" id="qa-body-a"></div>
+    </aside>
+  </div>
+
+
+  <!-- =========================================================================
+       VARIANT C: UTILITY FUNCTIONALIST (SaaS Workbench / Stripe Dev style)
+       ========================================================================= -->
+  <div id="view-c" class="cmpay-view">
+    <header>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <a class="brand mono" href="javascript:void(0)">CM.PAY // TEST-SHOP</a>
+        <div class="env-toggle">
+          <button type="button" class="env-btn" onclick="setEnvironment('production')">PROD</button>
+          <button type="button" class="env-btn on" onclick="setEnvironment('acceptance')">ACC</button>
+        </div>
+        <span class="chip-ok">[OAUTH: READY]</span>
+      </div>
+      <div class="nav-links mono">
+        <a href="javascript:void(0)" class="active">SHOP</a>
+        <a href="javascript:void(0)">DIRECT_API</a>
+        <a href="javascript:void(0)">MERCHANT_REF</a>
+        <a href="javascript:void(0)">ORDERS</a>
+        <a href="javascript:void(0)">CONFIG</a>
+      </div>
+    </header>
+
+    <main>
+      <h1 class="mono">TEST PRODUCTS</h1>
+      <div class="grid">
+        <!-- One cent -->
+        <div class="card">
+          <h2>One cent</h2>
+          <p>Fixed price product for testing 1-cent transactions.</p>
+          <div class="price">€0.01</div>
+          <button class="btn-buy mono" onclick="simulateCheckout('One cent', '0.01')">BUY NOW</button>
+        </div>
+
+        <!-- Test coin -->
+        <div class="card">
+          <h2>Test coin</h2>
+          <p>Fixed price product for the smallest possible card test.</p>
+          <div class="price">€0.02</div>
+          <button class="btn-buy mono" onclick="simulateCheckout('Test coin', '0.02')">BUY NOW</button>
+        </div>
+
+        <!-- Custom amount -->
+        <div class="card">
+          <h2>Custom amount</h2>
+          <p>You choose the price (€0.00 – €1000.00). Useful for testing amounts and declines.</p>
+          <label>
+            <span>AMOUNT (EUR)</span>
+            <input type="text" id="vc-custom-amount" placeholder="12.34" value="12.34">
+          </label>
+          <button class="btn-buy mono" onclick="simulateCheckout('Custom amount', document.getElementById('vc-custom-amount').value)">BUY NOW</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- QA Toolbar Floating Trigger -->
+    <button class="qa-toggle-btn" onclick="toggleQaPanel(true)">
+      <span>⚡</span>
+      <span>QA TEST CARDS</span>
+    </button>
+
+    <!-- QA Toolbar Panel -->
+    <aside class="qa-panel" id="qa-panel-c">
+      <div class="qa-panel-header mono">
+        <div class="qa-panel-title">
+          <span class="qa-badge" id="qa-badge-c">ACCEPTANCE</span>
+          <span>CM.COM TEST PRESETS</span>
+        </div>
+        <button class="qa-close-btn" onclick="toggleQaPanel(false)">&times;</button>
+      </div>
+      <div class="qa-panel-body" id="qa-body-c"></div>
+    </aside>
+  </div>
+
+
+  <!-- =========================================================================
+       CURRENT LIVE: NEO-BRUTALIST (Exact Reference Baseline)
+       ========================================================================= -->
+  <div id="view-live" class="cmpay-view">
+    <header>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;">
+        <a class="brand" href="javascript:void(0)">CM Pay Test Shop</a>
+        <div class="env-toggle">
+          <button type="button" class="env-btn" onclick="setEnvironment('production')">Production</button>
+          <button type="button" class="env-btn on" onclick="setEnvironment('acceptance')">Acceptance</button>
+        </div>
+        <span class="chip-ok">OAUTH READY</span>
+      </div>
+      <div class="nav-links">
+        <a href="javascript:void(0)" class="active">Basic shop</a>
+        <a href="javascript:void(0)">Direct API</a>
+        <a href="javascript:void(0)">Merchant order reference</a>
+        <a href="javascript:void(0)">Orders</a>
+        <a href="javascript:void(0)">Configuration</a>
+      </div>
+    </header>
+
+    <main>
+      <h1>Test products</h1>
+      <div class="grid">
+        <!-- One cent -->
+        <div class="card">
+          <h2>One cent</h2>
+          <p>Fixed price product for testing 1-cent transactions.</p>
+          <div class="price">€0.01</div>
+          <button class="btn-buy" onclick="simulateCheckout('One cent', '0.01')">Buy now</button>
+        </div>
+
+        <!-- Test coin -->
+        <div class="card">
+          <h2>Test coin</h2>
+          <p>Fixed price product for the smallest possible card test.</p>
+          <div class="price">€0.02</div>
+          <button class="btn-buy" onclick="simulateCheckout('Test coin', '0.02')">Buy now</button>
+        </div>
+
+        <!-- Custom amount -->
+        <div class="card">
+          <h2>Custom amount</h2>
+          <p>You choose the price (€0.00 – €1000.00). Useful for testing amounts and declines.</p>
+          <label>
+            <span>Amount (EUR)</span>
+            <input type="text" id="vl-custom-amount" placeholder="12.34" value="12.34">
+          </label>
+          <button class="btn-buy" onclick="simulateCheckout('Custom amount', document.getElementById('vl-custom-amount').value)">Buy now</button>
+        </div>
+      </div>
+    </main>
+
+    <!-- QA Toolbar Floating Trigger -->
+    <button class="qa-toggle-btn" onclick="toggleQaPanel(true)">
+      <span>⚡</span>
+      <span>QA TEST CARDS</span>
+    </button>
+
+    <!-- QA Toolbar Panel -->
+    <aside class="qa-panel" id="qa-panel-live">
+      <div class="qa-panel-header">
+        <div class="qa-panel-title">
+          <span class="qa-badge" id="qa-badge-live">ACCEPTANCE</span>
+          <span>CM.com Test Cards</span>
+        </div>
+        <button class="qa-close-btn" onclick="toggleQaPanel(false)">&times;</button>
+      </div>
+      <div class="qa-panel-body" id="qa-body-live"></div>
+    </aside>
+  </div>
+
+
+  <!-- =========================================================================
+       FLOATING SWITCHER BAR (Skill Spec: floating pill, keyboard arrows)
+       ========================================================================= -->
+  <div id="prototype-switcher">
+    <button class="arrow-btn" aria-label="Previous Variant" onclick="cycleVariant(-1)">&#8592;</button>
+    <div style="display: flex; align-items: center; gap: 8px;">
+      <span class="tag" id="switcher-variant-key">A</span>
+      <span id="switcher-variant-name" style="font-weight: 600;">Variant A: Minimal Monochrome</span>
+      <span class="hint">(Use &larr; &rarr;)</span>
+    </div>
+    <button class="arrow-btn" aria-label="Next Variant" onclick="cycleVariant(1)">&#8594;</button>
+  </div>
+
+
+  <!-- =========================================================================
+       QA DATA & SHARED LOGIC (COPIED EXACTLY FROM LIVE PRODUCTION)
+       ========================================================================= -->
+  <script>
+    const schemes = {
+      "visa": { "id": "visa", "name": "Visa & VPay", "prefix": "411111111111", "length": 16, "defaultCvv": "123" },
+      "mastercard": { "id": "mastercard", "name": "Mastercard", "prefix": "555555555555", "length": 16, "defaultCvv": "123" },
+      "amex": { "id": "amex", "name": "American Express", "prefix": "34111111111", "length": 15, "defaultCvv": "1234" },
+      "bancontact": { "id": "bancontact", "name": "Bancontact & Maestro", "prefix": "670399998800", "length": 16, "defaultCvv": "123" }
+    };
+
+    const scenarios = [
+      { "id": "std", "code": null, "group": "Standard & Frictionless", "name": "Standard (3DS Challenge Required)", "desc": "Standard test card number; authentication required.", "suffixes": { "visa": "1111", "mastercard": "4444", "amex": "1111", "bancontact": "1111" } },
+      { "id": "51", "code": "51", "group": "Standard & Frictionless", "name": "Frictionless (No Auth Required)", "desc": "Frictionless flow; no authentication challenge prompt.", "suffixes": { "visa": "1517", "mastercard": "4519", "amex": "1517", "bancontact": "1517" } },
+      { "id": "52", "code": "52", "group": "Soft Declines", "name": "Soft-Declined on 1st Attempt", "desc": "Card is soft-declined during first authorization attempt.", "suffixes": { "visa": "1525", "mastercard": "4527", "amex": "1525", "bancontact": "1525" } },
+      { "id": "53", "code": "53", "group": "Soft Declines", "name": "Always Soft-Declined", "desc": "Card is always soft-declined on every attempt.", "suffixes": { "visa": "1533", "mastercard": "4535", "amex": "1533", "bancontact": "1533" } },
+      { "id": "54", "code": "54", "group": "Declines & Errors", "name": "Not Enrolled for 3DSv2 (Reason Code 82)", "desc": "Card is not enrolled for 3DSv2 and with reason code 82 (Mastercard only).", "suffixes": { "mastercard": "4543" } },
+      { "id": "55", "code": "55", "group": "Declines & Errors", "name": "Not Enrolled for 3DSv2 (Reason Code 13)", "desc": "Card is not enrolled for 3DSv2 and with reason code 13.", "suffixes": { "visa": "1558", "mastercard": "4550", "amex": "1558", "bancontact": "1558" } },
+      { "id": "56", "code": "56", "group": "Declines & Errors", "name": "Unknown Error During Auth", "desc": "Unknown error during authentication.", "suffixes": { "visa": "1556", "mastercard": "4568", "amex": "1566", "bancontact": "1556" } },
+      { "id": "57", "code": "57", "group": "Declines & Errors", "name": "Rejected at Authentication", "desc": "Card is rejected at authentication.", "suffixes": { "visa": "1574", "mastercard": "4576", "amex": "1574", "bancontact": "1574" } },
+      { "id": "59", "code": "59", "group": "Declines & Errors", "name": "Card Unsupported by Issuer", "desc": "Card not supported by the issuer.", "suffixes": { "visa": "1590", "mastercard": "4592", "amex": "1590", "bancontact": "1590" } },
+      { "id": "61", "code": "61", "group": "3RI Decoupled Authentication", "name": "3RI Decoupled Success (5s Delay)", "desc": "3RI with decoupled successful authentication (5 seconds delay).", "suffixes": { "visa": "1616", "mastercard": "4618", "amex": "1616", "bancontact": "1616" } },
+      { "id": "62", "code": "62", "group": "3RI Decoupled Authentication", "name": "3RI Decoupled Failed (5s Delay)", "desc": "3RI with decoupled failed authentication (5 seconds delay).", "suffixes": { "visa": "1624", "mastercard": "4626", "amex": "1624", "bancontact": "1624" } },
+      { "id": "65", "code": "65", "group": "3RI Decoupled Authentication", "name": "3RI Decoupled Unsupported (Success)", "desc": "3RI decoupled authentication not supported, authentication success.", "suffixes": { "visa": "1657", "mastercard": "4659", "amex": "1657", "bancontact": "1657" } },
+      { "id": "66", "code": "66", "group": "3RI Decoupled Authentication", "name": "3RI Decoupled Unsupported (Failed)", "desc": "3RI decoupled authentication not supported, authentication failed.", "suffixes": { "visa": "1665", "mastercard": "4667", "amex": "1665", "bancontact": "1665" } }
+    ];
+
+    let currentSchemeId = 'visa';
+    let currentScenarioId = 'std';
+    let isQaPanelOpen = false;
+    let currentEnv = 'acceptance';
+
+    const VIEWS = [
+      { key: 'A', name: 'Variant A: Minimal Monochrome', id: 'view-a' },
+      { key: 'C', name: 'Variant C: Utility Functionalist', id: 'view-c' },
+      { key: 'LIVE', name: 'Current Live: Neo-Brutalist', id: 'view-live' }
+    ];
+    let currentViewIdx = 0;
+
+    function getVariantFromUrl() {
+      const params = new URLSearchParams(window.location.search);
+      const v = (params.get('variant') || 'A').toUpperCase();
+      const idx = VIEWS.findIndex(item => item.key === v);
+      return idx >= 0 ? idx : 0;
+    }
+
+    function selectVariant(idx) {
+      currentViewIdx = (idx + VIEWS.length) % VIEWS.length;
+      const active = VIEWS[currentViewIdx];
+
+      VIEWS.forEach(v => {
+        const el = document.getElementById(v.id);
+        if (el) el.classList.remove('active');
+      });
+      const activeEl = document.getElementById(active.id);
+      if (activeEl) activeEl.classList.add('active');
+
+      document.getElementById('switcher-variant-key').textContent = active.key;
+      document.getElementById('switcher-variant-name').textContent = active.name;
+
+      document.querySelectorAll('.top-v-pill').forEach((btn, i) => {
+        btn.classList.toggle('active', i === currentViewIdx);
+      });
+
+      const url = new URL(window.location.href);
+      url.searchParams.set('variant', active.key);
+      window.history.replaceState({}, '', url.toString());
+
+      syncQaPanelVisibility();
+    }
+
+    function cycleVariant(delta) {
+      selectVariant(currentViewIdx + delta);
+    }
+
+    window.addEventListener('keydown', (e) => {
+      const tag = (e.target && e.target.tagName) || '';
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes(tag.toUpperCase()) || e.target.isContentEditable) {
+        return;
+      }
+      if (e.key === 'ArrowLeft') cycleVariant(-1);
+      if (e.key === 'ArrowRight') cycleVariant(1);
+    });
+
+    // Formatting PAN
+    function formatPan(raw, schemeId) {
+      const digits = String(raw || '').replace(/\D/g, '');
+      if (!digits) return '';
+      if (schemeId === 'amex' || digits.length === 15) {
+        return [digits.slice(0, 4), digits.slice(4, 10), digits.slice(10)].filter(Boolean).join(' ');
+      }
+      return digits.match(/.{1,4}/g)?.join(' ') || digits;
+    }
+
+    // Render QA Body HTML into each view
+    function buildQaBodyHtml(prefix) {
+      const schemeOptions = Object.values(schemes).map(s => 
+        `<option value="${s.id}" ${s.id === currentSchemeId ? 'selected' : ''}>${s.name}</option>`
+      ).join('');
+
+      const groups = {};
+      scenarios.forEach(sc => {
+        if (!groups[sc.group]) groups[sc.group] = [];
+        groups[sc.group].push(sc);
+      });
+
+      const scenarioGroupsHtml = Object.keys(groups).map(g => `
+        <optgroup label="${g}">
+          ${groups[g].map(sc => `
+            <option value="${sc.id}" ${sc.id === currentScenarioId ? 'selected' : ''}>
+              ${sc.code ? '[' + sc.code + '] ' : ''}${sc.name}
+            </option>
+          `).join('')}
+        </optgroup>
+      `).join('');
+
+      const scheme = schemes[currentSchemeId] || schemes.visa;
+      const scenario = scenarios.find(s => s.id === currentScenarioId) || scenarios[0];
+      const suffix = scenario.suffixes[currentSchemeId];
+      const rawPan = suffix ? (scheme.prefix + suffix) : '';
+      const formatted = formatPan(rawPan, currentSchemeId);
+
+      return `
+        <div>
+          <label class="qa-field-label">CARD SCHEME</label>
+          <select class="qa-select" onchange="handleSchemeChange(this.value)">
+            ${schemeOptions}
+          </select>
+        </div>
+
+        <div>
+          <label class="qa-field-label">TEST SCENARIO</label>
+          <select class="qa-select" onchange="handleScenarioChange(this.value)">
+            ${scenarioGroupsHtml}
+          </select>
+        </div>
+
+        ${!suffix ? `
+          <div style="background:#fee2e2; border:1px solid #ef4444; padding:10px; border-radius:4px; font-size:12px; color:#991b1b;">
+            ${scenario.name} is not available for ${scheme.name}.
+          </div>
+        ` : `
+          <div class="qa-card-box">
+            <div>
+              <div style="display:flex; justify-content:space-between; margin-bottom:4px; font-size:11px; font-weight:700;">
+                <span>CARD NUMBER (PAN)</span>
+                <span style="background:#000; color:#fff; padding:1px 6px; border-radius:3px; font-size:10px;">${scheme.name.split(' ')[0].toUpperCase()}</span>
+              </div>
+              <div class="qa-copy-input-row">
+                <input class="qa-mono-input" type="text" readonly value="${formatted}">
+                <button class="qa-copy-btn" onclick="copyCardText('${rawPan}', this)">COPY</button>
+              </div>
+            </div>
+
+            <div style="display:grid; grid-template-columns:1fr 1fr 1.2fr; gap:6px;">
+              <div>
+                <span style="font-size:10px; font-weight:700; color:#666; display:block; margin-bottom:2px;">EXPIRY</span>
+                <div style="display:flex;">
+                  <input type="text" readonly value="12/30" style="width:100%; font-family:monospace; font-size:11px; padding:4px;">
+                  <button onclick="copyCardText('12/30', this)" style="font-size:10px; padding:2px 5px; cursor:pointer;">CP</button>
+                </div>
+              </div>
+              <div>
+                <span style="font-size:10px; font-weight:700; color:#666; display:block; margin-bottom:2px;">CVV</span>
+                <div style="display:flex;">
+                  <input type="text" readonly value="${scheme.defaultCvv}" style="width:100%; font-family:monospace; font-size:11px; padding:4px;">
+                  <button onclick="copyCardText('${scheme.defaultCvv}', this)" style="font-size:10px; padding:2px 5px; cursor:pointer;">CP</button>
+                </div>
+              </div>
+              <div>
+                <span style="font-size:10px; font-weight:700; color:#666; display:block; margin-bottom:2px;">HOLDER</span>
+                <div style="display:flex;">
+                  <input type="text" readonly value="Acceptance Tester" style="width:100%; font-family:monospace; font-size:11px; padding:4px;">
+                  <button onclick="copyCardText('Acceptance Tester', this)" style="font-size:10px; padding:2px 5px; cursor:pointer;">CP</button>
+                </div>
+              </div>
+            </div>
+
+            <button class="qa-copy-all-btn" onclick="copyCardText('${rawPan} | 12/30 | ${scheme.defaultCvv}', this)">
+              📋 COPY ALL (PAN • EXP • CVV)
+            </button>
+
+            <div class="qa-desc-box">
+              <div style="font-weight:700; font-size:11.5px; margin-bottom:2px;">${scenario.code ? 'Scenario ' + scenario.code + ': ' : ''}${scenario.name}</div>
+              <div>${scenario.desc}</div>
+            </div>
+          </div>
+        `}
+      `;
+    }
+
+    function renderQaPanels() {
+      document.getElementById('qa-body-a').innerHTML = buildQaBodyHtml('a');
+      document.getElementById('qa-body-c').innerHTML = buildQaBodyHtml('c');
+      document.getElementById('qa-body-live').innerHTML = buildQaBodyHtml('live');
+    }
+
+    function handleSchemeChange(schemeId) {
+      currentSchemeId = schemeId;
+      renderQaPanels();
+    }
+
+    function handleScenarioChange(scenId) {
+      currentScenarioId = scenId;
+      renderQaPanels();
+    }
+
+    function toggleQaPanel(open) {
+      isQaPanelOpen = open;
+      syncQaPanelVisibility();
+    }
+
+    function syncQaPanelVisibility() {
+      ['qa-panel-a', 'qa-panel-c', 'qa-panel-live'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.style.display = isQaPanelOpen ? 'block' : 'none';
+      });
+      document.querySelectorAll('.qa-toggle-btn').forEach(btn => {
+        btn.style.display = isQaPanelOpen ? 'none' : 'inline-flex';
+      });
+    }
+
+    function setEnvironment(env) {
+      currentEnv = env;
+      const isAcc = env === 'acceptance';
+      document.querySelectorAll('.env-btn').forEach(btn => {
+        const isThisAcc = btn.textContent.toLowerCase().includes('acc');
+        btn.classList.toggle('on', (isAcc && isThisAcc) || (!isAcc && !isThisAcc));
+      });
+      document.querySelectorAll('.qa-badge').forEach(b => {
+        b.textContent = env.toUpperCase();
+      });
+    }
+
+    function copyCardText(text, btn) {
+      navigator.clipboard.writeText(text).then(() => {
+        const orig = btn.textContent;
+        btn.textContent = 'COPIED!';
+        setTimeout(() => { btn.textContent = orig; }, 1200);
+      }).catch(() => {
+        alert('Copied: ' + text);
+      });
+    }
+
+    function simulateCheckout(productName, price) {
+      const scheme = schemes[currentSchemeId] || schemes.visa;
+      const scenario = scenarios.find(s => s.id === currentScenarioId) || scenarios[0];
+      const suffix = scenario.suffixes[currentSchemeId] || '1111';
+      const pan = scheme.prefix + suffix;
+      alert(`Simulating CM.com Pay Checkout:\n\nProduct: ${productName}\nAmount: €${price}\nEnvironment: ${currentEnv.toUpperCase()}\nTest Card: ${scheme.name} (${formatPan(pan, currentSchemeId)})\nScenario: ${scenario.name}`);
+    }
+
+    // Initialize
+    window.addEventListener('DOMContentLoaded', () => {
+      renderQaPanels();
+      selectVariant(getVariantFromUrl());
+    });
+  </script>
+</body>
+</html>
