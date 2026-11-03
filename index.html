@@ -1340,8 +1340,8 @@
       <span style="margin-left: 8px; color: #71717a;">Exact replication of <code>https://cmpay.homeassistantkrooswijkhof.duckdns.org/</code></span>
     </div>
     <div class="top-variant-pills">
-      <button class="top-v-pill" onclick="selectVariant(0)">Variant A: Minimal Monochrome</button>
-      <button class="top-v-pill" onclick="selectVariant(1)">Variant C: Utility Functionalist</button>
+      <button class="top-v-pill" onclick="selectVariant(0)">★ Variant C: Utility Functionalist (Preferred)</button>
+      <button class="top-v-pill" onclick="selectVariant(1)">Variant A: Minimal Monochrome</button>
       <button class="top-v-pill" onclick="selectVariant(2)">Current Live: Neo-Brutalist</button>
     </div>
   </div>
@@ -1370,21 +1370,10 @@
     </header>
 
     <main>
-      <div class="shop-header-row">
-        <div>
-          <h1>Test products</h1>
-          <p>Select a test preset or demo item to simulate CM.com Hosted Checkout.</p>
-        </div>
-        <div class="product-filter-tabs" id="filter-tabs-a">
-          <button type="button" class="filter-tab active" data-filter="all" onclick="filterProducts('a', 'all')">All Products (6)</button>
-          <button type="button" class="filter-tab" data-filter="test" onclick="filterProducts('a', 'test')">Test Tokens (3)</button>
-          <button type="button" class="filter-tab" data-filter="merch" onclick="filterProducts('a', 'merch')">Demo Store (3)</button>
-        </div>
-      </div>
-
+      <h1>Test products</h1>
       <div class="grid" id="grid-a">
         <!-- One cent -->
-        <div class="card" data-cat="test">
+        <div class="card">
           <div class="card-img-wrap">
             <img src="assets/images/one-cent.jpg" alt="One cent test coin">
             <span class="card-badge">MICRO TEST</span>
@@ -1400,7 +1389,7 @@
         </div>
 
         <!-- Test coin -->
-        <div class="card" data-cat="test">
+        <div class="card">
           <div class="card-img-wrap">
             <img src="assets/images/test-coin.jpg" alt="Test coin">
             <span class="card-badge">MIN ACQUIRING</span>
@@ -1416,9 +1405,9 @@
         </div>
 
         <!-- Custom amount -->
-        <div class="card" data-cat="test">
+        <div class="card">
           <div class="card-img-wrap">
-            <img src="assets/images/custom-card.jpg" alt="Custom amount test voucher">
+            <img src="assets/images/custom-card.jpg" alt="Custom amount test card">
             <span class="card-badge">FLEX VOUCHER</span>
           </div>
           <div class="card-content">
@@ -1431,54 +1420,6 @@
           </div>
           <div class="card-footer">
             <button class="btn-buy" onclick="simulateCheckout('Custom amount', document.getElementById('va-custom-amount').value)">Buy now</button>
-          </div>
-        </div>
-
-        <!-- Developer Hoodie -->
-        <div class="card" data-cat="merch">
-          <div class="card-img-wrap">
-            <img src="assets/images/hoodie.jpg" alt="Developer Hoodie">
-            <span class="card-badge">STORE SWAG</span>
-          </div>
-          <div class="card-content">
-            <h2>Developer Hoodie</h2>
-            <p>Heavyweight 400 GSM organic cotton with embroidered CM.Pay monogram.</p>
-          </div>
-          <div class="card-footer">
-            <div class="price">€42.00</div>
-            <button class="btn-buy" onclick="simulateCheckout('Developer Hoodie', '42.00')">Buy now</button>
-          </div>
-        </div>
-
-        <!-- Mechanical Keypad -->
-        <div class="card" data-cat="merch">
-          <div class="card-img-wrap">
-            <img src="assets/images/keyboard.jpg" alt="Mechanical Keypad">
-            <span class="card-badge">HARDWARE</span>
-          </div>
-          <div class="card-content">
-            <h2>Mechanical Keypad</h2>
-            <p>Tactile mechanical numpad for high-speed test data and card entry.</p>
-          </div>
-          <div class="card-footer">
-            <div class="price">€28.50</div>
-            <button class="btn-buy" onclick="simulateCheckout('Mechanical Keypad', '28.50')">Buy now</button>
-          </div>
-        </div>
-
-        <!-- Specialty Espresso -->
-        <div class="card" data-cat="merch">
-          <div class="card-img-wrap">
-            <img src="assets/images/coffee.jpg" alt="Specialty Espresso">
-            <span class="card-badge">ROASTERY</span>
-          </div>
-          <div class="card-content">
-            <h2>Specialty Espresso</h2>
-            <p>Single-origin whole beans roasted for late-night API gateway sprints.</p>
-          </div>
-          <div class="card-footer">
-            <div class="price">€9.00</div>
-            <button class="btn-buy" onclick="simulateCheckout('Specialty Espresso', '9.00')">Buy now</button>
           </div>
         </div>
       </div>
@@ -1527,21 +1468,10 @@
     </header>
 
     <main>
-      <div class="shop-header-row">
-        <div>
-          <h1 class="mono">TEST PRODUCTS</h1>
-          <p class="mono">[MODE: HOSTED_CHECKOUT // CURRENCY: EUR]</p>
-        </div>
-        <div class="product-filter-tabs" id="filter-tabs-c">
-          <button type="button" class="filter-tab active" data-filter="all" onclick="filterProducts('c', 'all')">ALL (6)</button>
-          <button type="button" class="filter-tab" data-filter="test" onclick="filterProducts('c', 'test')">TEST_PRESETS (3)</button>
-          <button type="button" class="filter-tab" data-filter="merch" onclick="filterProducts('c', 'merch')">STORE_GOODS (3)</button>
-        </div>
-      </div>
-
+      <h1 class="mono">TEST PRODUCTS</h1>
       <div class="grid" id="grid-c">
         <!-- One cent -->
-        <div class="card" data-cat="test">
+        <div class="card">
           <div class="card-img-wrap">
             <img src="assets/images/one-cent.jpg" alt="One cent test coin">
             <span class="card-badge">[SKU: TST-001]</span>
@@ -1557,7 +1487,7 @@
         </div>
 
         <!-- Test coin -->
-        <div class="card" data-cat="test">
+        <div class="card">
           <div class="card-img-wrap">
             <img src="assets/images/test-coin.jpg" alt="Test coin">
             <span class="card-badge">[SKU: TST-002]</span>
@@ -1573,7 +1503,7 @@
         </div>
 
         <!-- Custom amount -->
-        <div class="card" data-cat="test">
+        <div class="card">
           <div class="card-img-wrap">
             <img src="assets/images/custom-card.jpg" alt="Custom amount test voucher">
             <span class="card-badge">[SKU: VAR-FLEX]</span>
@@ -1588,54 +1518,6 @@
           </div>
           <div class="card-footer">
             <button class="btn-buy mono" onclick="simulateCheckout('Custom amount', document.getElementById('vc-custom-amount').value)">BUY NOW</button>
-          </div>
-        </div>
-
-        <!-- Developer Hoodie -->
-        <div class="card" data-cat="merch">
-          <div class="card-img-wrap">
-            <img src="assets/images/hoodie.jpg" alt="Developer Hoodie">
-            <span class="card-badge">[SKU: SWG-042]</span>
-          </div>
-          <div class="card-content">
-            <h2>Developer Hoodie</h2>
-            <p>Heavyweight 400 GSM organic cotton with embroidered CM.Pay monogram.</p>
-          </div>
-          <div class="card-footer">
-            <div class="price">€42.00</div>
-            <button class="btn-buy mono" onclick="simulateCheckout('Developer Hoodie', '42.00')">BUY NOW</button>
-          </div>
-        </div>
-
-        <!-- Mechanical Keypad -->
-        <div class="card" data-cat="merch">
-          <div class="card-img-wrap">
-            <img src="assets/images/keyboard.jpg" alt="Mechanical Keypad">
-            <span class="card-badge">[SKU: HARD-028]</span>
-          </div>
-          <div class="card-content">
-            <h2>Mechanical Keypad</h2>
-            <p>Tactile mechanical numpad for high-speed test data and card entry.</p>
-          </div>
-          <div class="card-footer">
-            <div class="price">€28.50</div>
-            <button class="btn-buy mono" onclick="simulateCheckout('Mechanical Keypad', '28.50')">BUY NOW</button>
-          </div>
-        </div>
-
-        <!-- Specialty Espresso -->
-        <div class="card" data-cat="merch">
-          <div class="card-img-wrap">
-            <img src="assets/images/coffee.jpg" alt="Specialty Espresso">
-            <span class="card-badge">[SKU: COF-009]</span>
-          </div>
-          <div class="card-content">
-            <h2>Specialty Espresso</h2>
-            <p>Single-origin whole beans roasted for late-night API gateway sprints.</p>
-          </div>
-          <div class="card-footer">
-            <div class="price">€9.00</div>
-            <button class="btn-buy mono" onclick="simulateCheckout('Specialty Espresso', '9.00')">BUY NOW</button>
           </div>
         </div>
       </div>
@@ -1684,21 +1566,10 @@
     </header>
 
     <main>
-      <div class="shop-header-row">
-        <div>
-          <h1>Test products</h1>
-          <p>SELECT A TRANSACTION PRESET OR REAL SHOP ITEM FOR CHECKOUT DEMO</p>
-        </div>
-        <div class="product-filter-tabs" id="filter-tabs-live">
-          <button type="button" class="filter-tab active" data-filter="all" onclick="filterProducts('live', 'all')">ALL ITEMS (6)</button>
-          <button type="button" class="filter-tab" data-filter="test" onclick="filterProducts('live', 'test')">TEST PRESETS (3)</button>
-          <button type="button" class="filter-tab" data-filter="merch" onclick="filterProducts('live', 'merch')">STORE MERCH (3)</button>
-        </div>
-      </div>
-
+      <h1>Test products</h1>
       <div class="grid" id="grid-live">
         <!-- One cent -->
-        <div class="card" data-cat="test">
+        <div class="card">
           <div class="card-img-wrap">
             <img src="assets/images/one-cent.jpg" alt="One cent test coin">
             <span class="card-badge">MICRO TEST</span>
@@ -1714,7 +1585,7 @@
         </div>
 
         <!-- Test coin -->
-        <div class="card" data-cat="test">
+        <div class="card">
           <div class="card-img-wrap">
             <img src="assets/images/test-coin.jpg" alt="Test coin">
             <span class="card-badge">MIN ACQUIRING</span>
@@ -1730,7 +1601,7 @@
         </div>
 
         <!-- Custom amount -->
-        <div class="card" data-cat="test">
+        <div class="card">
           <div class="card-img-wrap">
             <img src="assets/images/custom-card.jpg" alt="Custom amount test card">
             <span class="card-badge">FLEX VOUCHER</span>
@@ -1745,54 +1616,6 @@
           </div>
           <div class="card-footer">
             <button class="btn-buy" onclick="simulateCheckout('Custom amount', document.getElementById('vl-custom-amount').value)">Buy now</button>
-          </div>
-        </div>
-
-        <!-- Developer Hoodie -->
-        <div class="card" data-cat="merch">
-          <div class="card-img-wrap">
-            <img src="assets/images/hoodie.jpg" alt="Developer Hoodie">
-            <span class="card-badge">STORE SWAG</span>
-          </div>
-          <div class="card-content">
-            <h2>Developer Hoodie</h2>
-            <p>Heavyweight 400 GSM organic cotton with embroidered CM.Pay monogram.</p>
-          </div>
-          <div class="card-footer">
-            <div class="price">€42.00</div>
-            <button class="btn-buy" onclick="simulateCheckout('Developer Hoodie', '42.00')">Buy now</button>
-          </div>
-        </div>
-
-        <!-- Mechanical Keypad -->
-        <div class="card" data-cat="merch">
-          <div class="card-img-wrap">
-            <img src="assets/images/keyboard.jpg" alt="Mechanical Keypad">
-            <span class="card-badge">HARDWARE</span>
-          </div>
-          <div class="card-content">
-            <h2>Mechanical Keypad</h2>
-            <p>Tactile mechanical numpad for high-speed test data and card entry.</p>
-          </div>
-          <div class="card-footer">
-            <div class="price">€28.50</div>
-            <button class="btn-buy" onclick="simulateCheckout('Mechanical Keypad', '28.50')">Buy now</button>
-          </div>
-        </div>
-
-        <!-- Specialty Espresso -->
-        <div class="card" data-cat="merch">
-          <div class="card-img-wrap">
-            <img src="assets/images/coffee.jpg" alt="Specialty Espresso">
-            <span class="card-badge">ROASTERY</span>
-          </div>
-          <div class="card-content">
-            <h2>Specialty Espresso</h2>
-            <p>Single-origin whole beans roasted for late-night API gateway sprints.</p>
-          </div>
-          <div class="card-footer">
-            <div class="price">€9.00</div>
-            <button class="btn-buy" onclick="simulateCheckout('Specialty Espresso', '9.00')">Buy now</button>
           </div>
         </div>
       </div>
@@ -1865,15 +1688,15 @@
     let currentEnv = 'acceptance';
 
     const VIEWS = [
+      { key: 'C', name: 'Variant C: Utility Functionalist (Preferred)', id: 'view-c' },
       { key: 'A', name: 'Variant A: Minimal Monochrome', id: 'view-a' },
-      { key: 'C', name: 'Variant C: Utility Functionalist', id: 'view-c' },
       { key: 'LIVE', name: 'Current Live: Neo-Brutalist', id: 'view-live' }
     ];
     let currentViewIdx = 0;
 
     function getVariantFromUrl() {
       const params = new URLSearchParams(window.location.search);
-      const v = (params.get('variant') || 'A').toUpperCase();
+      const v = (params.get('variant') || 'C').toUpperCase();
       const idx = VIEWS.findIndex(item => item.key === v);
       return idx >= 0 ? idx : 0;
     }
