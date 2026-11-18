@@ -1329,6 +1329,262 @@
       padding: 8px 10px;
       font-size: 0.8rem;
     }
+    /* =========================================================================
+       ORDERS & REFUND MODAL (NEO-RAW UTILITY SPECIFICATION)
+       ========================================================================= */
+    .modal-backdrop {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      z-index: 10000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-backdrop.open {
+      display: flex;
+    }
+    .orders-modal {
+      background: #ffffff;
+      border: 4px solid #000000;
+      box-shadow: 8px 8px 0px #000000;
+      width: 100%;
+      max-width: 980px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 4px solid #000000;
+      background: #f4f4f5;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .modal-header h2 {
+      margin: 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.15rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: -0.02em;
+    }
+    .modal-close-btn {
+      background: #ffffff;
+      border: 3px solid #000000;
+      box-shadow: 3px 3px 0px #000000;
+      font-size: 1.2rem;
+      line-height: 1;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .modal-close-btn:hover {
+      box-shadow: 1px 1px 0px #000000;
+      transform: translate(2px, 2px);
+    }
+    .orders-stats-bar {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      border-bottom: 3px solid #000000;
+      background: #ffffff;
+    }
+    .orders-stat-box {
+      padding: 12px 18px;
+      border-right: 3px solid #000000;
+    }
+    .orders-stat-box:last-child {
+      border-right: none;
+    }
+    .orders-stat-box .lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #71717a;
+    }
+    .orders-stat-box .val {
+      font-family: 'Anybody', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-top: 2px;
+    }
+    .modal-body {
+      padding: 20px;
+      overflow-y: auto;
+      flex: 1;
+    }
+    .orders-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 3px solid #000000;
+      font-size: 0.85rem;
+    }
+    .orders-table th {
+      background: #000000;
+      color: #ffffff;
+      font-family: 'JetBrains Mono', monospace;
+      text-transform: uppercase;
+      font-size: 0.72rem;
+      letter-spacing: 0.04em;
+      padding: 10px 12px;
+      text-align: left;
+    }
+    .orders-table td {
+      border-bottom: 2px solid #e4e4e7;
+      padding: 10px 12px;
+      vertical-align: middle;
+      font-family: 'Hanken Grotesk', sans-serif;
+    }
+    .orders-table tr:last-child td {
+      border-bottom: none;
+    }
+    .badge-status {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 3px 8px;
+      border: 2px solid #000000;
+    }
+    .badge-status.success {
+      background: #bbf7d0;
+      color: #14532d;
+    }
+    .badge-status.partially-refunded {
+      background: #fed7aa;
+      color: #7c2d12;
+    }
+    .badge-status.refunded {
+      background: #e4e4e7;
+      color: #27272a;
+    }
+    .badge-env {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 2px 6px;
+      border: 1px solid #000000;
+    }
+    .badge-env.acc {
+      background: #2563eb;
+      color: #ffffff;
+    }
+    .badge-env.prod {
+      background: #ff5f1f;
+      color: #ffffff;
+    }
+    .btn-refund-action {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      background: #ff5f1f;
+      color: #ffffff;
+      border: 2px solid #000000;
+      box-shadow: 2px 2px 0px #000000;
+      padding: 5px 10px;
+      cursor: pointer;
+    }
+    .btn-refund-action:hover:not(:disabled) {
+      box-shadow: 1px 1px 0px #000000;
+      transform: translate(1px, 1px);
+    }
+    .btn-refund-action:disabled {
+      background: #e4e4e7;
+      color: #a1a1aa;
+      border-color: #a1a1aa;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+    .refund-dialog-backdrop {
+      display: none;
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .refund-dialog-backdrop.open {
+      display: flex;
+    }
+    .refund-dialog-card {
+      background: #ffffff;
+      border: 4px solid #000000;
+      box-shadow: 6px 6px 0px #000000;
+      width: 100%;
+      max-width: 480px;
+      padding: 20px;
+    }
+    .refund-dialog-card h3 {
+      margin: 0 0 12px 0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      text-transform: uppercase;
+    }
+    .refund-summary-grid {
+      background: #f4f4f5;
+      border: 2px solid #000000;
+      padding: 10px 14px;
+      margin-bottom: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .refund-form-group {
+      margin-bottom: 14px;
+    }
+    .refund-form-group label {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .refund-form-group input, .refund-form-group select {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 8px 10px;
+      border: 2px solid #000000;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      outline: none;
+    }
+    .refund-form-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #000000;
+      color: #ffffff;
+      padding: 12px 18px;
+      border: 3px solid #ff5f1f;
+      box-shadow: 4px 4px 0px #ff5f1f;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      z-index: 100000;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -1364,7 +1620,7 @@
         <a href="javascript:void(0)" class="active">Basic shop</a>
         <a href="javascript:void(0)">Direct API</a>
         <a href="javascript:void(0)">Merchant order</a>
-        <a href="javascript:void(0)">Orders</a>
+        <a href="javascript:void(0)" onclick="openOrdersModal()">Orders</a>
         <a href="javascript:void(0)">Config</a>
       </div>
     </header>
@@ -1462,7 +1718,7 @@
         <a href="javascript:void(0)" class="active">SHOP</a>
         <a href="javascript:void(0)">DIRECT_API</a>
         <a href="javascript:void(0)">MERCHANT_REF</a>
-        <a href="javascript:void(0)">ORDERS</a>
+        <a href="javascript:void(0)" onclick="openOrdersModal()">ORDERS</a>
         <a href="javascript:void(0)">CONFIG</a>
       </div>
     </header>
@@ -1560,7 +1816,7 @@
         <a href="javascript:void(0)" class="active">Basic shop</a>
         <a href="javascript:void(0)">Direct API</a>
         <a href="javascript:void(0)">Merchant order reference</a>
-        <a href="javascript:void(0)">Orders</a>
+        <a href="javascript:void(0)" onclick="openOrdersModal()">Orders</a>
         <a href="javascript:void(0)">Configuration</a>
       </div>
     </header>
@@ -1640,6 +1896,96 @@
     </aside>
   </div>
 
+
+  <!-- =========================================================================
+       ORDERS & TRANSACTION REFUND DASHBOARD MODAL
+       ========================================================================= -->
+  <div id="orders-modal-backdrop" class="modal-backdrop">
+    <div class="orders-modal">
+      <div class="modal-header">
+        <h2>CM.PAY // ORDERS & REFUND DASHBOARD</h2>
+        <button class="modal-close-btn" onclick="closeOrdersModal()">&times;</button>
+      </div>
+
+      <div class="orders-stats-bar">
+        <div class="orders-stat-box">
+          <div class="lbl">Total Orders</div>
+          <div class="val" id="stat-total-orders">0</div>
+        </div>
+        <div class="orders-stat-box">
+          <div class="lbl">Total Captured</div>
+          <div class="val" id="stat-total-captured">€0.00</div>
+        </div>
+        <div class="orders-stat-box">
+          <div class="lbl">Total Refunded</div>
+          <div class="val" id="stat-total-refunded" style="color: #ff5f1f;">€0.00</div>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        <div style="margin-bottom: 14px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+          <span style="font-family:'JetBrains Mono', monospace; font-size: 0.8rem; color: #52525b;">AUTHORITATIVE TRANSACTION LOG (ACC & PROD)</span>
+          <button class="btn-buy mono" style="padding: 6px 12px; font-size: 0.75rem;" onclick="simulateCheckout('Test coin', '0.02')">+ SIMULATE NEW ORDER</button>
+        </div>
+        <div style="overflow-x: auto;">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>Order ID</th>
+                <th>Product / Details</th>
+                <th>Env</th>
+                <th>Captured</th>
+                <th>Refunded</th>
+                <th>Status</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody id="orders-table-body">
+              <!-- Dynamic rows -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Refund Sub-Dialog -->
+      <div id="refund-dialog-backdrop" class="refund-dialog-backdrop">
+        <div class="refund-dialog-card">
+          <h3>ISSUE TRANSACTION REFUND</h3>
+          <div class="refund-summary-grid">
+            <div>Order: <b id="rf-order-id">-</b></div>
+            <div>Env: <b id="rf-order-env">-</b></div>
+            <div>Captured: <b id="rf-order-total">€0.00</b></div>
+            <div>Max Refundable: <b id="rf-order-max" style="color:#ff5f1f;">€0.00</b></div>
+          </div>
+
+          <div class="refund-form-group">
+            <label>Refund Type</label>
+            <select id="rf-type" onchange="handleRefundTypeChange()">
+              <option value="full">Full Refund (Remaining Balance)</option>
+              <option value="partial">Partial Refund (Custom Amount)</option>
+            </select>
+          </div>
+
+          <div class="refund-form-group" id="rf-amount-group" style="display:none;">
+            <label>Refund Amount (€ EUR)</label>
+            <input type="number" step="0.01" min="0.01" id="rf-amount-input">
+          </div>
+
+          <div class="refund-form-group">
+            <label>Reason / Audit Note</label>
+            <input type="text" id="rf-reason-input" value="Customer requested refund" placeholder="e.g. Return, QA test refund">
+          </div>
+
+          <div class="refund-form-actions">
+            <button type="button" class="btn-buy mono" style="background:#fff; color:#000;" onclick="closeRefundDialog()">CANCEL</button>
+            <button type="button" class="btn-buy mono" onclick="confirmRefund()">CONFIRM REFUND</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-msg" class="toast-msg"></div>
 
   <!-- =========================================================================
        FLOATING SWITCHER BAR (Skill Spec: floating pill, keyboard arrows)
@@ -1899,7 +2245,204 @@
       });
     }
 
+    // =========================================================================
+    // ORDERS & REFUND LOGIC
+    // =========================================================================
+    let orders = [
+      {
+        id: 'ORD-8942',
+        ref: 'REF-TST-002-A',
+        product: 'Test coin',
+        amount: 0.02,
+        refundedAmount: 0.00,
+        env: 'ACC',
+        status: 'SUCCESS',
+        date: '2026-11-18 10:14:22',
+        txnId: 'txn_cm_acc_902f1a8b'
+      },
+      {
+        id: 'ORD-8941',
+        ref: 'REF-TST-001-B',
+        product: 'One cent',
+        amount: 0.01,
+        refundedAmount: 0.01,
+        env: 'ACC',
+        status: 'REFUNDED',
+        date: '2026-11-18 09:42:05',
+        txnId: 'txn_cm_acc_817c09d3'
+      }
+    ];
+
+    let activeRefundOrderId = null;
+
+    function openOrdersModal() {
+      document.getElementById('orders-modal-backdrop').classList.add('open');
+      renderOrdersTable();
+    }
+
+    function closeOrdersModal() {
+      document.getElementById('orders-modal-backdrop').classList.remove('open');
+      closeRefundDialog();
+    }
+
+    function renderOrdersTable() {
+      const tbody = document.getElementById('orders-table-body');
+      if (!tbody) return;
+
+      let totalCaptured = 0;
+      let totalRefunded = 0;
+
+      tbody.innerHTML = orders.map(ord => {
+        totalCaptured += ord.amount;
+        totalRefunded += ord.refundedAmount;
+
+        const remaining = Math.max(0, ord.amount - ord.refundedAmount);
+        const canRefund = remaining > 0 && ord.status !== 'FAILED';
+        
+        let statusBadgeClass = 'success';
+        if (ord.status === 'REFUNDED') statusBadgeClass = 'refunded';
+        else if (ord.status === 'PARTIALLY_REFUNDED') statusBadgeClass = 'partially-refunded';
+
+        const envClass = ord.env.toLowerCase() === 'prod' ? 'prod' : 'acc';
+
+        return `
+          <tr>
+            <td>
+              <div style="font-family:'JetBrains Mono', monospace; font-weight:700;">${ord.id}</div>
+              <div style="font-size:0.75rem; color:#71717a;">${ord.ref}</div>
+            </td>
+            <td>
+              <div style="font-weight:600;">${ord.product}</div>
+              <div style="font-size:0.72rem; color:#71717a; font-family:'JetBrains Mono', monospace;">${ord.date}</div>
+            </td>
+            <td><span class="badge-env ${envClass}">${ord.env}</span></td>
+            <td><b style="font-family:'JetBrains Mono', monospace;">€${ord.amount.toFixed(2)}</b></td>
+            <td><span style="font-family:'JetBrains Mono', monospace; color:${ord.refundedAmount > 0 ? '#ff5f1f' : '#71717a'}; font-weight:700;">€${ord.refundedAmount.toFixed(2)}</span></td>
+            <td><span class="badge-status ${statusBadgeClass}">${ord.status.replace('_', ' ')}</span></td>
+            <td>
+              <button class="btn-refund-action" ${canRefund ? '' : 'disabled'} onclick="openRefundDialog('${ord.id}')">
+                ${canRefund ? 'REFUND' : 'FULLY REFUNDED'}
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('stat-total-orders').textContent = orders.length;
+      document.getElementById('stat-total-captured').textContent = '€' + totalCaptured.toFixed(2);
+      document.getElementById('stat-total-refunded').textContent = '€' + totalRefunded.toFixed(2);
+    }
+
+    function openRefundDialog(orderId) {
+      const ord = orders.find(o => o.id === orderId);
+      if (!ord) return;
+      activeRefundOrderId = orderId;
+      const remaining = Math.max(0, ord.amount - ord.refundedAmount);
+
+      document.getElementById('rf-order-id').textContent = ord.id;
+      document.getElementById('rf-order-env').textContent = ord.env;
+      document.getElementById('rf-order-total').textContent = '€' + ord.amount.toFixed(2);
+      document.getElementById('rf-order-max').textContent = '€' + remaining.toFixed(2);
+
+      const typeSelect = document.getElementById('rf-type');
+      typeSelect.value = 'full';
+      document.getElementById('rf-amount-group').style.display = 'none';
+      document.getElementById('rf-amount-input').value = remaining.toFixed(2);
+      document.getElementById('rf-amount-input').max = remaining.toFixed(2);
+
+      document.getElementById('refund-dialog-backdrop').classList.add('open');
+    }
+
+    function closeRefundDialog() {
+      activeRefundOrderId = null;
+      document.getElementById('refund-dialog-backdrop').classList.remove('open');
+    }
+
+    function handleRefundTypeChange() {
+      const type = document.getElementById('rf-type').value;
+      const amountGroup = document.getElementById('rf-amount-group');
+      if (type === 'partial') {
+        amountGroup.style.display = 'block';
+      } else {
+        amountGroup.style.display = 'none';
+      }
+    }
+
+    function confirmRefund() {
+      const ord = orders.find(o => o.id === activeRefundOrderId);
+      if (!ord) return;
+
+      const type = document.getElementById('rf-type').value;
+      const remaining = Math.max(0, ord.amount - ord.refundedAmount);
+      let refundVal = remaining;
+
+      if (type === 'partial') {
+        refundVal = parseFloat(document.getElementById('rf-amount-input').value);
+        if (isNaN(refundVal) || refundVal <= 0) {
+          alert('Please enter a valid refund amount.');
+          return;
+        }
+        if (refundVal > remaining + 0.0001) {
+          alert(`Refund amount cannot exceed remaining balance of €${remaining.toFixed(2)}.`);
+          return;
+        }
+      }
+
+      const reason = document.getElementById('rf-reason-input').value || 'Refund requested';
+
+      ord.refundedAmount += refundVal;
+      ord.refundedAmount = Math.round(ord.refundedAmount * 100) / 100;
+
+      if (ord.refundedAmount >= ord.amount - 0.0001) {
+        ord.status = 'REFUNDED';
+      } else {
+        ord.status = 'PARTIALLY_REFUNDED';
+      }
+
+      closeRefundDialog();
+      renderOrdersTable();
+      showToast(`Refund processed: €${refundVal.toFixed(2)} for ${ord.id} (${reason})`);
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast-msg');
+      if (!t) return;
+      t.textContent = msg;
+      t.style.display = 'block';
+      setTimeout(() => {
+        t.style.display = 'none';
+      }, 3500);
+    }
+
     function simulateCheckout(productName, price) {
+      const scheme = schemes[currentSchemeId] || schemes.visa;
+      const scenario = scenarios.find(s => s.id === currentScenarioId) || scenarios[0];
+      const suffix = scenario.suffixes[currentSchemeId] || '1111';
+      const pan = scheme.prefix + suffix;
+      const numPrice = parseFloat(price) || 0.02;
+
+      // Create new transaction in orders list
+      const newId = 'ORD-' + Math.floor(1000 + Math.random() * 9000);
+      const newRef = 'REF-' + Math.random().toString(36).substring(2, 8).toUpperCase();
+      const now = new Date().toISOString().replace('T', ' ').substring(0, 19);
+
+      orders.unshift({
+        id: newId,
+        ref: newRef,
+        product: productName,
+        amount: numPrice,
+        refundedAmount: 0.00,
+        env: currentEnv === 'production' ? 'PROD' : 'ACC',
+        status: 'SUCCESS',
+        date: now,
+        txnId: 'txn_cm_' + (currentEnv === 'production' ? 'prod' : 'acc') + '_' + Math.random().toString(36).substring(2, 10)
+      });
+
+      renderOrdersTable();
+      openOrdersModal();
+      showToast(`Checkout simulated: ${productName} (€${numPrice.toFixed(2)}) captured! Ready for refund test.`);
+    }
+
       const scheme = schemes[currentSchemeId] || schemes.visa;
       const scenario = scenarios.find(s => s.id === currentScenarioId) || scenarios[0];
       const suffix = scenario.suffixes[currentSchemeId] || '1111';

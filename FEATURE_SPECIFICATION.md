@@ -38,6 +38,19 @@ A lightweight, zero-dependency payment gateway testing workbench built to demons
 ### 2.4 Custom Merchant Reference Testing (`/merchant`)
 * Supports custom alphanumeric reference generation and manual entry (1–35 characters) to verify downstream reconciliation across acquiring channels and cardholder statements.
 
+### 2.5 Transaction Refund Flow (`POST /transactions/{id}/refunds`)
+* **Endpoint Architecture**: Dispatches a `POST` request to CM.com's refund sub-resource:
+  `POST /v1/paymentmethods/{paymentMethod}/v1/transactions/{transactionId}/refunds`
+* **Authentication**: Uses an active OAuth 2.0 Bearer token scoped to the transaction's originating environment.
+* **Payload Specification**:
+  * `amount`: Integer in eurocents (e.g. `2` for €0.02). Optional for full refund (defaults to remaining unrefunded balance).
+  * `reason`: Optional administrative string (1–255 characters) logged in the CM.com Merchant Portal.
+* **Eligibility & Business Rules**:
+  * Transactions must be captured and settled in `SUCCESS` status. Uncaptured authorizations must be cancelled instead.
+  * Strict validation ensuring cumulative refunds do not exceed `amount - refundedAmount`.
+  * Idempotency controls prevent duplicate refund submissions during concurrent calls or network retries.
+* **Response Contract**: Returns `201 Created` with updated `refundedAmount` and `refundedPendingAmount`.
+
 ---
 
 ## 3. Dual-Environment Architecture (Acceptance & Production)
@@ -66,11 +79,20 @@ A lightweight, zero-dependency payment gateway testing workbench built to demons
 * Live table logging all test orders with:
   * Order ID & Merchant Reference
   * Timestamp
-  * Amount & Currency
-  * Payment Status badge
+  * Amount, Currency & Refunded Breakdown
+  * Payment Status badge (`SUCCESS`, `PARTIALLY_REFUNDED`, `REFUNDED`, `PENDING`, `FAILURE`)
   * Environment badge (`PROD` vs `ACC`)
   * Transaction ID linked to CM.com
   * Manual status re-synchronization triggers
+  * Interactive **Refund** action trigger for eligible transactions
+
+### 4.4 Refund Management & Ledger
+* **Full & Partial Refunds**: Operators can issue full refunds or specify custom partial amounts in eurocents.
+* **Status Transitions**:
+  * Unrefunded: `SUCCESS`
+  * Partial refund: `PARTIALLY_REFUNDED` (displaying cumulative refunded amount vs original total)
+  * Total refund: `REFUNDED`
+* **Audit Trail**: Every refund operation records an immutable event with timestamp, refunded amount, remaining balance, and operator reason.
 
 ---
 
